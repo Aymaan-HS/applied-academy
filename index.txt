@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Applied Academy – Expert Coaching Noida | Grades 6–12</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ─── TOKENS ─────────────────────────────────── */
+:root{
+  --bg:#05070f;
+  --bg2:#0b0f1e;
+  --card:#0e1628;
+  --border:#1a2540;
+  --blue:#00c8ff;
+  --blue2:#0084ff;
+  --gold:#ffc247;
+  --gold2:#ff9a1f;
+  --white:#f0f4ff;
+  --muted:#7a8bb5;
+  --radius:18px;
+  --fs-hero:clamp(3rem,7vw,6rem);
+  --fs-h2:clamp(2rem,4vw,3.2rem);
+  --fs-h3:clamp(1.3rem,2vw,1.7rem);
+}
+
+/* ─── RESET ─────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'DM Sans',sans-serif;overflow-x:hidden;cursor:none}
+
+/* ─── CUSTOM CURSOR ──────────────────────────── */
+#cursor{position:fixed;width:12px;height:12px;background:var(--blue);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .15s,background .2s;mix-blend-mode:screen}
+#cursor-ring{position:fixed;width:38px;height:38px;border:1.5px solid var(--blue);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .4s cubic-bezier(.25,.46,.45,.94),width .3s,height .3s,opacity .3s;opacity:.6}
+body:hover #cursor{opacity:1}
+
+/* ─── NOISE OVERLAY ──────────────────────────── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:1000;opacity:.5}
+
+/* ─── CANVAS BG ──────────────────────────────── */
+#canvas-bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ─── NAV ────────────────────────────────────── */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:18px 5vw;display:flex;align-items:center;justify-content:space-between;transition:background .4s,backdrop-filter .4s,border-bottom .4s}
+nav.scrolled{background:rgba(5,7,15,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;letter-spacing:-.01em;cursor:pointer}
+.nav-logo span{color:var(--blue)}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links li a,.nav-links li button{background:none;border:none;color:var(--muted);font-family:'DM Sans',sans-serif;font-size:.9rem;font-weight:500;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:color .25s;padding:0}
+.nav-links li a:hover,.nav-links li button:hover,.nav-links li a.active,.nav-links li button.active{color:var(--white)}
+.nav-cta{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border:none;padding:10px 24px;border-radius:50px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:.85rem;letter-spacing:.05em;cursor:pointer;transition:box-shadow .3s,transform .2s}
+.nav-cta:hover{box-shadow:0 0 24px rgba(0,196,255,.5);transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.hamburger span{display:block;width:24px;height:2px;background:var(--white);border-radius:2px;transition:all .3s}
+
+/* ─── PAGES ──────────────────────────────────── */
+.page{display:none;min-height:100vh;position:relative;z-index:2;padding-top:80px}
+.page.active{display:block}
+
+/* ─── PAGE TRANSITION ─────────────────────────── */
+.page-enter{animation:pageIn .6s cubic-bezier(.22,1,.36,1) forwards}
+@keyframes pageIn{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── HERO ───────────────────────────────────── */
+.hero{min-height:100vh;display:flex;align-items:center;padding:0 5vw;position:relative;overflow:hidden}
+.hero-content{max-width:800px;position:relative;z-index:2}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(0,196,255,.1);border:1px solid rgba(0,196,255,.25);border-radius:50px;padding:8px 18px;font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:28px;animation:fadeUp .8s .2s both}
+.hero-badge::before{content:'';width:7px;height:7px;background:var(--blue);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+.hero h1{font-family:'Playfair Display',serif;font-size:var(--fs-hero);font-weight:900;line-height:1.06;letter-spacing:-.02em;animation:fadeUp .8s .35s both}
+.hero h1 .hl{background:linear-gradient(135deg,var(--blue),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.15rem;color:var(--muted);line-height:1.7;margin-top:22px;max-width:540px;animation:fadeUp .8s .5s both}
+.hero-actions{display:flex;gap:16px;margin-top:40px;flex-wrap:wrap;animation:fadeUp .8s .65s both}
+.btn-primary{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border:none;padding:16px 36px;border-radius:50px;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;letter-spacing:.04em;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.btn-primary::after{content:'';position:absolute;inset:0;background:white;opacity:0;transition:opacity .3s}
+.btn-primary:hover{box-shadow:0 0 40px rgba(0,132,255,.55);transform:translateY(-2px)}
+.btn-secondary{background:transparent;color:var(--white);border:1.5px solid var(--border);padding:16px 36px;border-radius:50px;font-family:'Syne',sans-serif;font-weight:600;font-size:.95rem;cursor:pointer;transition:all .3s}
+.btn-secondary:hover{border-color:var(--blue);color:var(--blue)}
+.hero-stats{display:flex;gap:48px;margin-top:64px;animation:fadeUp .8s .8s both;flex-wrap:wrap}
+.stat-item{display:flex;flex-direction:column;gap:4px}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.stat-label{font-size:.8rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+.hero-visual{position:absolute;right:-5%;top:50%;transform:translateY(-50%);width:min(520px,45vw);opacity:.15;pointer-events:none}
+.hero-visual svg{width:100%;height:auto}
+
+/* ─── FLOATING CARDS ─────────────────────────── */
+.float-cards{display:flex;gap:16px;margin-top:60px;flex-wrap:wrap;animation:fadeUp .8s 1s both}
+.float-card{background:rgba(14,22,40,.7);border:1px solid var(--border);border-radius:14px;padding:16px 20px;display:flex;align-items:center;gap:12px;backdrop-filter:blur(10px);transition:transform .3s,border-color .3s}
+.float-card:hover{transform:translateY(-4px);border-color:var(--blue)}
+.float-card .icon{font-size:1.5rem}
+.float-card p{font-size:.82rem;color:var(--muted);font-weight:400}
+.float-card strong{display:block;font-size:.93rem;color:var(--white);font-weight:600}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── SECTION ────────────────────────────────── */
+section{padding:100px 5vw;position:relative}
+.section-tag{display:inline-block;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--blue);font-family:'Syne',sans-serif;font-weight:700;margin-bottom:14px}
+.section-title{font-family:'Playfair Display',serif;font-size:var(--fs-h2);font-weight:900;line-height:1.1;letter-spacing:-.02em}
+.section-title .hl{background:linear-gradient(135deg,var(--blue),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.section-sub{color:var(--muted);font-size:1.05rem;line-height:1.7;margin-top:14px;max-width:560px}
+
+/* ─── WHY CHOOSE ─────────────────────────────── */
+.why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;margin-top:60px}
+.why-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px 30px;position:relative;overflow:hidden;transition:all .4s;cursor:default}
+.why-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(0,196,255,.06),transparent);opacity:0;transition:opacity .4s}
+.why-card:hover{transform:translateY(-6px);border-color:rgba(0,196,255,.4)}
+.why-card:hover::before{opacity:1}
+.why-icon{font-size:2.2rem;margin-bottom:20px;display:block}
+.why-card h3{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:12px;color:var(--white)}
+.why-card p{font-size:.9rem;color:var(--muted);line-height:1.7}
+.why-card .corner{position:absolute;top:0;right:0;width:80px;height:80px;background:linear-gradient(225deg,rgba(0,196,255,.08),transparent);border-radius:0 var(--radius) 0 80px}
+
+/* ─── MARQUEE ────────────────────────────────── */
+.marquee-wrap{overflow:hidden;background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:18px 0;margin:0}
+.marquee-track{display:flex;gap:60px;animation:marquee 22s linear infinite;width:max-content}
+.marquee-track span{font-family:'Syne',sans-serif;font-size:.85rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.marquee-track span b{color:var(--blue);margin-right:8px}
+@keyframes marquee{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ─── ABOUT PAGE ─────────────────────────────── */
+.about-hero{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;padding:120px 5vw 80px}
+.about-img-wrap{position:relative}
+.about-img-bg{width:100%;aspect-ratio:4/5;border-radius:24px;background:linear-gradient(135deg,var(--blue2),var(--blue),var(--gold));display:flex;align-items:center;justify-content:center;font-size:8rem;position:relative;overflow:hidden}
+.about-img-bg::after{content:'';position:absolute;inset:0;background:var(--card);margin:3px;border-radius:22px;display:flex;align-items:center;justify-content:center}
+.about-img-inner{position:relative;z-index:1;font-size:7rem;text-align:center;line-height:1}
+.about-badge{position:absolute;bottom:-20px;right:-20px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 24px;text-align:center;backdrop-filter:blur(10px)}
+.about-badge .num{font-family:'Playfair Display',serif;font-size:2rem;font-weight:900;color:var(--gold)}
+.about-badge .txt{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.about-content .section-tag{margin-top:0}
+.about-content p{color:var(--muted);line-height:1.8;margin-top:18px;font-size:1rem}
+
+/* ─── TEACHERS ───────────────────────────────── */
+.teachers-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;margin-top:50px}
+.teacher-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:40px 32px;text-align:center;position:relative;overflow:hidden;transition:all .4s}
+.teacher-card:hover{transform:translateY(-8px);box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.teacher-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--blue),var(--gold))}
+.teacher-avatar{width:90px;height:90px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--gold));display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 20px;position:relative}
+.teacher-avatar::after{content:'';position:absolute;inset:-3px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--gold));z-index:-1}
+.teacher-card h3{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;margin-bottom:6px}
+.teacher-subject{font-size:.8rem;color:var(--blue);letter-spacing:.12em;text-transform:uppercase;font-weight:600;margin-bottom:14px}
+.teacher-card p{font-size:.88rem;color:var(--muted);line-height:1.7}
+
+/* ─── COURSES PAGE ───────────────────────────── */
+.grade-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:50px;margin-bottom:40px}
+.grade-tab{background:var(--card);border:1px solid var(--border);border-radius:50px;padding:10px 24px;font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;letter-spacing:.06em;cursor:pointer;transition:all .3s;color:var(--muted)}
+.grade-tab.active,.grade-tab:hover{background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border-color:transparent;box-shadow:0 0 20px rgba(0,132,255,.35)}
+.course-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.course-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:32px;transition:all .4s;position:relative;overflow:hidden}
+.course-card:hover{transform:translateY(-6px);border-color:rgba(0,196,255,.35)}
+.course-card .subject-icon{font-size:2.4rem;margin-bottom:18px}
+.course-card h3{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;margin-bottom:8px}
+.course-card .grade-badge{display:inline-block;background:rgba(0,196,255,.1);border:1px solid rgba(0,196,255,.2);color:var(--blue);font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:50px;margin-bottom:14px}
+.course-card p{font-size:.88rem;color:var(--muted);line-height:1.65}
+.course-features{list-style:none;margin-top:18px;display:flex;flex-direction:column;gap:8px}
+.course-features li{font-size:.83rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.course-features li::before{content:'✦';color:var(--blue);font-size:.6rem;flex-shrink:0}
+
+/* ─── TESTIMONIALS ───────────────────────────── */
+.testimonials-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-top:60px}
+.testi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:36px;position:relative;transition:all .4s}
+.testi-card:hover{transform:translateY(-5px);border-color:rgba(255,194,71,.3)}
+.testi-card::before{content:'"';position:absolute;top:20px;right:28px;font-family:'Playfair Display',serif;font-size:6rem;color:rgba(255,194,71,.08);line-height:1}
+.testi-stars{display:flex;gap:4px;margin-bottom:18px}
+.testi-stars span{color:var(--gold);font-size:1rem}
+.testi-text{font-size:.92rem;color:var(--muted);line-height:1.75;margin-bottom:24px;font-style:italic}
+.testi-author{display:flex;align-items:center;gap:14px}
+.testi-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),var(--gold));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;color:#fff;flex-shrink:0}
+.testi-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.92rem}
+.testi-grade{font-size:.78rem;color:var(--muted)}
+
+/* ─── FAQ ────────────────────────────────────── */
+.faq-list{margin-top:60px;display:flex;flex-direction:column;gap:16px;max-width:800px}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:border-color .3s}
+.faq-item.open{border-color:rgba(0,196,255,.3)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:24px 28px;cursor:pointer;gap:20px}
+.faq-q h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;line-height:1.4}
+.faq-icon{width:28px;height:28px;border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.1rem;color:var(--blue);transition:transform .3s,background .3s,border-color .3s}
+.faq-item.open .faq-icon{transform:rotate(45deg);background:var(--blue);border-color:var(--blue);color:#fff}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.25,.46,.45,.94),padding .3s}
+.faq-a p{padding:0 28px 24px;color:var(--muted);font-size:.92rem;line-height:1.75}
+.faq-item.open .faq-a{max-height:400px}
+
+/* ─── CONTACT ────────────────────────────────── */
+.contact-layout{display:grid;grid-template-columns:1fr 1.2fr;gap:60px;margin-top:60px}
+.contact-info{display:flex;flex-direction:column;gap:30px}
+.contact-info-item{display:flex;gap:18px;align-items:flex-start}
+.contact-info-icon{width:50px;height:50px;border-radius:14px;background:rgba(0,196,255,.1);border:1px solid rgba(0,196,255,.2);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0}
+.contact-info-text h4{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:4px}
+.contact-info-text p,.contact-info-text a{font-size:.9rem;color:var(--muted);text-decoration:none;transition:color .25s}
+.contact-info-text a:hover{color:var(--blue)}
+.contact-form{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:48px 40px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{display:flex;flex-direction:column;gap:8px;margin-bottom:20px}
+.form-group label{font-size:.82rem;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-family:'Syne',sans-serif}
+.form-group input,.form-group textarea,.form-group select{background:var(--bg);border:1.5px solid var(--border);border-radius:12px;padding:14px 18px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:.95rem;transition:border-color .3s,box-shadow .3s;outline:none;width:100%}
+.form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,196,255,.1)}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-group select option{background:var(--bg2)}
+.submit-btn{width:100%;background:linear-gradient(135deg,var(--blue2),var(--blue));color:#fff;border:none;padding:18px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;letter-spacing:.05em;cursor:pointer;transition:all .3s;margin-top:8px}
+.submit-btn:hover{box-shadow:0 0 35px rgba(0,132,255,.5);transform:translateY(-2px)}
+.success-msg{display:none;text-align:center;padding:20px;background:rgba(0,196,255,.1);border:1px solid rgba(0,196,255,.3);border-radius:12px;color:var(--blue);font-weight:600;margin-top:16px}
+
+/* ─── STUDY MATERIAL ─────────────────────────── */
+.material-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;margin-top:50px}
+.material-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;transition:all .4s;cursor:pointer;position:relative;overflow:hidden}
+.material-card:hover{transform:translateY(-5px);border-color:rgba(255,194,71,.35)}
+.material-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,194,71,.05),transparent);opacity:0;transition:opacity .4s}
+.material-card:hover::after{opacity:1}
+.material-card .mc-icon{font-size:2rem;margin-bottom:14px}
+.material-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.98rem;margin-bottom:8px}
+.material-card p{font-size:.83rem;color:var(--muted);line-height:1.6}
+.material-card .dl-btn{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-size:.78rem;color:var(--gold);font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.material-card .dl-btn::after{content:'→'}
+
+/* ─── FOOTER ─────────────────────────────────── */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:60px 5vw 30px;position:relative;z-index:2}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:50px;margin-bottom:50px}
+.footer-brand .nav-logo{font-size:1.6rem;display:block;margin-bottom:16px}
+.footer-brand p{font-size:.88rem;color:var(--muted);line-height:1.75;max-width:280px}
+.footer-col h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;color:var(--white);margin-bottom:20px}
+.footer-col ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+.footer-col ul li a,.footer-col ul li button{background:none;border:none;color:var(--muted);font-size:.88rem;text-decoration:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:color .25s;padding:0;text-align:left}
+.footer-col ul li a:hover,.footer-col ul li button:hover{color:var(--blue)}
+.footer-social{display:flex;gap:12px;margin-top:18px}
+.social-btn{width:38px;height:38px;border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;cursor:pointer;transition:all .3s;text-decoration:none;background:transparent;color:var(--muted)}
+.social-btn:hover{border-color:var(--blue);color:var(--blue);transform:translateY(-2px)}
+.footer-bottom{border-top:1px solid var(--border);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:gap;gap:12px}
+.footer-bottom p{font-size:.82rem;color:var(--muted)}
+
+/* ─── SCROLL ANIMATIONS ───────────────────────── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.22,1,.36,1),transform .8s cubic-bezier(.22,1,.36,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* ─── DIVIDER ─────────────────────────────────── */
+.divider{width:60px;height:3px;background:linear-gradient(90deg,var(--blue),var(--gold));border-radius:2px;margin:20px 0}
+
+/* ─── MOBILE NAV ─────────────────────────────── */
+.mobile-menu{position:fixed;inset:0;background:rgba(5,7,15,.97);z-index:490;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:32px;transform:translateY(-100%);transition:transform .5s cubic-bezier(.25,.46,.45,.94)}
+.mobile-menu.open{transform:translateY(0)}
+.mobile-menu a,.mobile-menu button{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;color:var(--muted);background:none;border:none;cursor:pointer;text-decoration:none;transition:color .25s}
+.mobile-menu a:hover,.mobile-menu button:hover,.mobile-menu a.active,.mobile-menu button.active{color:var(--white)}
+
+/* ─── GLOW ORBS ─────────────────────────────── */
+.orb{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;opacity:.35}
+.orb-blue{background:radial-gradient(circle,var(--blue),transparent 70%)}
+.orb-gold{background:radial-gradient(circle,var(--gold),transparent 70%)}
+
+/* ─── STATS BAR ──────────────────────────────── */
+.stats-bar{background:var(--bg2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:50px 5vw}
+.stats-bar-inner{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;text-align:center}
+.sb-item{position:relative}
+.sb-item+.sb-item::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);height:50%;width:1px;background:var(--border)}
+.sb-num{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;background:linear-gradient(135deg,var(--blue),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1}
+.sb-label{font-size:.8rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-top:6px}
+
+/* ─── RESPONSIVE ─────────────────────────────── */
+@media(max-width:900px){
+  .nav-links,.nav-cta{display:none}
+  .hamburger{display:flex}
+  .about-hero{grid-template-columns:1fr;gap:40px;padding:100px 5vw 60px}
+  .contact-layout{grid-template-columns:1fr}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .stats-bar-inner{grid-template-columns:1fr 1fr;gap:30px}
+  .form-row{grid-template-columns:1fr}
+  .hero-stats{gap:28px}
+}
+@media(max-width:600px){
+  .footer-grid{grid-template-columns:1fr}
+  .stats-bar-inner{grid-template-columns:1fr 1fr}
+  .hero{padding-top:40px}
+}
+
+/* ─── DEMO MODAL ─────────────────────────────── */
+.modal-overlay{position:fixed;inset:0;background:rgba(5,7,15,.85);z-index:600;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity .4s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:24px;padding:48px;max-width:500px;width:90%;position:relative;transform:scale(.9);transition:transform .4s cubic-bezier(.25,.46,.45,.94)}
+.modal-overlay.open .modal{transform:scale(1)}
+.modal h2{font-family:'Playfair Display',serif;font-size:1.8rem;margin-bottom:8px}
+.modal p{font-size:.9rem;color:var(--muted);margin-bottom:28px}
+.modal-close{position:absolute;top:20px;right:20px;background:none;border:none;color:var(--muted);font-size:1.5rem;cursor:pointer;transition:color .25s}
+.modal-close:hover{color:var(--white)}
+
+/* ─── SCROLL PROGRESS ────────────────────────── */
+#progress{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,var(--blue),var(--gold));z-index:600;transition:width .1s}
+
+/* ─── BACK TO TOP ─────────────────────────────── */
+#btt{position:fixed;bottom:30px;right:30px;width:46px;height:46px;background:linear-gradient(135deg,var(--blue2),var(--blue));border:none;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.1rem;color:#fff;z-index:400;opacity:0;transform:translateY(10px);transition:all .3s}
+#btt.show{opacity:1;transform:translateY(0)}
+#btt:hover{box-shadow:0 0 20px rgba(0,132,255,.5)}
+
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- SCROLL PROGRESS -->
+<div id="progress"></div>
+
+<!-- CANVAS BACKGROUND -->
+<canvas id="canvas-bg"></canvas>
+
+<!-- BACK TO TOP -->
+<button id="btt" title="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- DEMO MODAL -->
+<div class="modal-overlay" id="demoModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h2>Book a <span class="hl" style="background:linear-gradient(135deg,var(--blue),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Free Demo</span></h2>
+    <p>Experience our teaching methods firsthand — no cost, no commitment.</p>
+    <div class="form-group"><label>Full Name *</label><input type="text" placeholder="Your child's name"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Class / Grade *</label>
+        <select>
+          <option value="">Select Grade</option>
+          <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+          <option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Subject *</label>
+        <select>
+          <option value="">Select Subject</option>
+          <option>Mathematics</option><option>Science</option><option>Both</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Phone Number *</label><input type="tel" placeholder="+91 98765 43210"/></div>
+    <button class="submit-btn" onclick="handleModalSubmit(this)">🎓 Confirm Free Demo</button>
+    <div class="success-msg" id="modalSuccess">🎉 Request received! We'll call you within 24 hours.</div>
+  </div>
+</div>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#" onclick="navigate('home');closeMobileMenu();return false">Home</a>
+  <button onclick="navigate('about');closeMobileMenu()">About</button>
+  <button onclick="navigate('courses');closeMobileMenu()">Courses</button>
+  <button onclick="navigate('material');closeMobileMenu()">Study Material</button>
+  <button onclick="navigate('testimonials');closeMobileMenu()">Testimonials</button>
+  <button onclick="navigate('faq');closeMobileMenu()">FAQ</button>
+  <button onclick="navigate('contact');closeMobileMenu()">Contact</button>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="navigate('home')">Applied<span>Academy</span></div>
+  <ul class="nav-links">
+    <li><button onclick="navigate('home')" id="nav-home" class="active">Home</button></li>
+    <li><button onclick="navigate('about')" id="nav-about">About</button></li>
+    <li><button onclick="navigate('courses')" id="nav-courses">Courses</button></li>
+    <li><button onclick="navigate('material')" id="nav-material">Study Material</button></li>
+    <li><button onclick="navigate('testimonials')" id="nav-testimonials">Testimonials</button></li>
+    <li><button onclick="navigate('faq')" id="nav-faq">FAQ</button></li>
+    <li><button onclick="navigate('contact')" id="nav-contact">Contact</button></li>
+  </ul>
+  <button class="nav-cta" onclick="openModal()">Book Free Demo</button>
+  <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  PAGE: HOME                                  -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="orb orb-blue" style="width:500px;height:500px;right:-100px;top:-50px;opacity:.2"></div>
+    <div class="orb orb-gold" style="width:300px;height:300px;left:-80px;bottom:100px;opacity:.12"></div>
+    <div class="hero-content">
+      <div class="hero-badge">🎓 Premier Coaching Institute · Noida</div>
+      <h1>We Make You Able to <span class="hl">Think Out of the Box</span></h1>
+      <p class="hero-sub">Expert coaching for Grades 6–12 in Mathematics & Science. 7+ years of building strong foundations, one student at a time.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="openModal()">📚 Book Free Demo Class</button>
+        <button class="btn-secondary" onclick="navigate('courses')">Explore Courses →</button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item"><div class="stat-num" data-count="90">0</div><div class="stat-label">% Grade Improvement</div></div>
+        <div class="stat-item"><div class="stat-num" data-count="7">0</div><div class="stat-label">Years of Excellence</div></div>
+        <div class="stat-item"><div class="stat-num" data-count="500">0</div><div class="stat-label">Students Mentored</div></div>
+        <div class="stat-item"><div class="stat-num" data-count="12">0</div><div class="stat-label">Grades Covered</div></div>
+      </div>
+      <div class="float-cards">
+        <div class="float-card"><div class="icon">📐</div><div><strong>Mathematics</strong><p>Class 6–12 · CBSE & ICSE</p></div></div>
+        <div class="float-card"><div class="icon">🔬</div><div><strong>Science</strong><p>Physics · Chemistry · Biology</p></div></div>
+        <div class="float-card"><div class="icon">📝</div><div><strong>Entrance Prep</strong><p>JEE · NEET Foundation</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span><b>✦</b>Mathematics</span><span><b>✦</b>Physics</span><span><b>✦</b>Chemistry</span><span><b>✦</b>Biology</span>
+      <span><b>✦</b>CBSE</span><span><b>✦</b>ICSE</span><span><b>✦</b>JEE Foundation</span><span><b>✦</b>NEET Foundation</span>
+      <span><b>✦</b>Grade 6–12</span><span><b>✦</b>7+ Years Excellence</span><span><b>✦</b>Noida</span><span><b>✦</b>Personal Attention</span>
+      <!-- duplicate for seamless loop -->
+      <span><b>✦</b>Mathematics</span><span><b>✦</b>Physics</span><span><b>✦</b>Chemistry</span><span><b>✦</b>Biology</span>
+      <span><b>✦</b>CBSE</span><span><b>✦</b>ICSE</span><span><b>✦</b>JEE Foundation</span><span><b>✦</b>NEET Foundation</span>
+      <span><b>✦</b>Grade 6–12</span><span><b>✦</b>7+ Years Excellence</span><span><b>✦</b>Noida</span><span><b>✦</b>Personal Attention</span>
+    </div>
+  </div>
+
+  <!-- WHY CHOOSE -->
+  <section>
+    <div class="section-tag">Why Applied Academy</div>
+    <h2 class="section-title">Built Different. <span class="hl">Results Proven.</span></h2>
+    <p class="section-sub">We don't just teach — we transform how students think, approach problems, and excel.</p>
+    <div class="why-grid">
+      <div class="why-card reveal">
+        <div class="corner"></div>
+        <span class="why-icon">📈</span>
+        <h3>90% Grade Improvement</h3>
+        <p>Our result-oriented coaching approach consistently delivers a 90% improvement in student grades through conceptual clarity and personalized guidance.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-1">
+        <div class="corner"></div>
+        <span class="why-icon">💡</span>
+        <h3>Innovative Teaching Methods</h3>
+        <p>We encourage deep understanding and critical thinking rather than rote memorization. Every concept is explored from its roots.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <div class="corner"></div>
+        <span class="why-icon">🎯</span>
+        <h3>Tailored Learning Plans</h3>
+        <p>Every student learns differently. We create custom plans addressing individual strengths and areas of improvement.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-3">
+        <div class="corner"></div>
+        <span class="why-icon">🏆</span>
+        <h3>College Entrance Prep</h3>
+        <p>Comprehensive prep courses designed to help students excel in competitive entrance exams and secure top college admissions.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-4">
+        <div class="corner"></div>
+        <span class="why-icon">📋</span>
+        <h3>Regular Testing & Feedback</h3>
+        <p>Periodic assessments and detailed feedback keep students on track. Progress is measured, tracked, and celebrated.</p>
+      </div>
+      <div class="why-card reveal">
+        <div class="corner"></div>
+        <span class="why-icon">📄</span>
+        <h3>Study Material & PDFs</h3>
+        <p>Curated revision PDFs and study material ensure students are always well-prepared for exams and tests.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-bar-inner">
+      <div class="sb-item reveal"><div class="sb-num">7+</div><div class="sb-label">Years of Academic Excellence</div></div>
+      <div class="sb-item reveal reveal-delay-1"><div class="sb-num">90%</div><div class="sb-label">Average Grade Improvement</div></div>
+      <div class="sb-item reveal reveal-delay-2"><div class="sb-num">500+</div><div class="sb-label">Students Mentored</div></div>
+      <div class="sb-item reveal reveal-delay-3"><div class="sb-num">2</div><div class="sb-label">Expert Subject Specialists</div></div>
+    </div>
+  </div>
+
+  <!-- QUICK TESTIMONIAL -->
+  <section style="padding:80px 5vw">
+    <div class="section-tag">Student Voices</div>
+    <h2 class="section-title">What Students <span class="hl">Say About Us</span></h2>
+    <div style="margin-top:40px;max-width:780px">
+      <div class="testi-card reveal">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-text">"Applied Academy is more than just a coaching center—it's a place where learning is enjoyable and stress-free. The lively and positive environment makes studying feel effortless. Vikas Bhaiya, our Maths teacher, is both strict (especially with homework!) and incredibly supportive. Ashish Bhaiya, our Science teacher, is equally amazing. They ensure we truly understand concepts rather than just memorizing them. With personalized attention, PDFs for revision, and regular tests, we're always well-prepared."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">MT</div>
+          <div><div class="testi-name">Manya Tyagi</div><div class="testi-grade">Class 10th Student</div></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:28px">
+      <button class="btn-secondary" onclick="navigate('testimonials')">Read All Testimonials →</button>
+    </div>
+  </section>
+
+  <!-- CTA STRIP -->
+  <section style="padding:80px 5vw">
+    <div style="background:linear-gradient(135deg,rgba(0,132,255,.15),rgba(255,194,71,.1));border:1px solid var(--border);border-radius:24px;padding:60px 50px;text-align:center;position:relative;overflow:hidden">
+      <div class="orb orb-blue" style="width:300px;height:300px;left:-50px;top:-50px;opacity:.15"></div>
+      <div class="orb orb-gold" style="width:200px;height:200px;right:-30px;bottom:-30px;opacity:.1"></div>
+      <div class="section-tag" style="margin-bottom:16px">Limited Seats Available</div>
+      <h2 class="section-title" style="font-size:clamp(1.8rem,4vw,2.8rem)">Ready to Unlock Your <span class="hl">Full Potential?</span></h2>
+      <p style="color:var(--muted);margin:16px auto 32px;max-width:480px;font-size:1rem">Join hundreds of students who've transformed their academic performance with Applied Academy.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+        <button class="btn-primary" onclick="openModal()">📚 Book Free Demo Now</button>
+        <button class="btn-secondary" onclick="navigate('contact')">📞 Talk to Us</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  PAGE: ABOUT                                 -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <div class="about-hero">
+    <div class="about-img-wrap">
+      <div class="about-img-bg">
+        <div class="about-img-inner">🏫<br><div style="font-size:1.5rem;font-family:'Syne',sans-serif;font-weight:800;margin-top:12px;color:var(--white)">Applied<br>Academy</div></div>
+      </div>
+      <div class="about-badge"><div class="num">7+</div><div class="txt">Years of<br>Excellence</div></div>
+    </div>
+    <div class="about-content">
+      <div class="section-tag">Our Story</div>
+      <h2 class="section-title">Shaping Minds in <span class="hl">Noida Since 2017</span></h2>
+      <div class="divider"></div>
+      <p>Applied Academy is a premier coaching institute based in Noida, dedicated to empowering students from Grades 6 to 12 with a strong foundation in Mathematics and Science.</p>
+      <p>With over 7 years of academic excellence, Applied Academy is known for its result-oriented teaching methods, conceptual clarity, and personalized guidance. We believe learning should be enjoyable, meaningful, and transformative — not just exam-focused.</p>
+      <p>Our philosophy: <em style="color:var(--blue)">"We make you able to think out of the box."</em> Every class is designed to develop genuine understanding, curiosity, and the ability to solve problems creatively.</p>
+      <div style="display:flex;gap:16px;margin-top:32px;flex-wrap:wrap">
+        <button class="btn-primary" onclick="openModal()">Book Free Demo</button>
+        <button class="btn-secondary" onclick="navigate('contact')">Get in Touch</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MISSION / VISION -->
+  <section style="padding:60px 5vw 80px">
+    <div class="why-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="why-card reveal">
+        <span class="why-icon">🎯</span>
+        <h3>Our Mission</h3>
+        <p>To provide quality, accessible coaching that builds unshakeable conceptual foundations and ignites a lifelong love for learning in every student.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-1">
+        <span class="why-icon">👁</span>
+        <h3>Our Vision</h3>
+        <p>To be the most trusted coaching center in Noida, recognized for academic excellence, student well-being, and innovation in teaching.</p>
+      </div>
+      <div class="why-card reveal reveal-delay-2">
+        <span class="why-icon">💎</span>
+        <h3>Our Values</h3>
+        <p>Integrity, excellence, personalization, and joy of learning. We treat every student as an individual with unique potential to be unlocked.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEACHERS -->
+  <section style="padding:0 5vw 100px">
+    <div class="section-tag">Meet the Mentors</div>
+    <h2 class="section-title">The Experts Behind <span class="hl">Your Success</span></h2>
+    <p class="section-sub">Passionate educators who combine deep subject knowledge with genuine care for each student's growth.</p>
+    <div class="teachers-grid">
+      <div class="teacher-card reveal">
+        <div class="teacher-avatar">👨‍🏫</div>
+        <h3>Vikas Sir</h3>
+        <div class="teacher-subject">Mathematics · Founder & Director</div>
+        <p>The heart and founder of Applied Academy, Vikas Sir is renowned for making complex mathematical concepts feel intuitive and approachable. Strict about homework, yet incredibly supportive — he pushes students to discover their own problem-solving abilities.</p>
+        <div style="margin-top:20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span style="background:rgba(0,196,255,.1);border:1px solid rgba(0,196,255,.2);color:var(--blue);font-size:.72rem;padding:4px 12px;border-radius:50px;font-weight:600">Algebra</span>
+          <span style="background:rgba(0,196,255,.1);border:1px solid rgba(0,196,255,.2);color:var(--blue);font-size:.72rem;padding:4px 12px;border-radius:50px;font-weight:600">Geometry</span>
+          <span style="background:rgba(0,196,255,.1);border:1px solid rgba(0,196,255,.2);color:var(--blue);font-size:.72rem;padding:4px 12px;border-radius:50px;font-weight:600">Calculus</span>
+          <span style="background:rgba(0,196,255,.1);border:1px solid rgba(0,196,255,.2);color:var(--blue);font-size:.72rem;padding:4px 12px;border-radius:50px;font-weight:600">Trigonometry</span>
+        </div>
+      </div>
+      <div class="teacher-card reveal reveal-delay-2">
+        <div class="teacher-avatar">👨‍🔬</div>
+        <h3>Ashish Sir</h3>
+        <div class="teacher-subject">Science Specialist</div>
+        <p>Ashish Sir brings science to life with engaging explanations and real-world connections. His teaching style ensures students grasp the "why" behind every concept — from physics laws to chemical reactions to biological processes.</p>
+        <div style="margin-top:20px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <span style="background:rgba(255,194,71,.1);border:1px solid rgba(255,194,71,.2);color:var(--gold);font-size:.72rem;padding:4px 12px;border-radius:50px;font-weight:600">Physics</span>
+          <span style="background:rgba(255,194,71,.1);border:1px solid rgba(255,194,71,.2);color:var(--gold);font-size:.72rem;padding:4px 12px;border-radius:50px;font-weight:600">Chemistry</span>
+          <span style="background:rgba(255,194,71,.1);border:1px solid rgba(255,194,71,.2);color:var(--gold);font-size:.72rem;padding:4px 12px;border-radius:50px;font-weight:600">Biology</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  PAGE: COURSES                               -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-courses">
+  <section style="padding:100px 5vw 60px">
+    <div class="section-tag">Our Curriculum</div>
+    <h2 class="section-title">Courses for Every <span class="hl">Grade & Goal</span></h2>
+    <p class="section-sub">Comprehensive Math and Science coaching tailored for CBSE & ICSE students from Class 6 to 12.</p>
+    <div class="grade-tabs" id="gradeTabs">
+      <button class="grade-tab active" onclick="filterGrade('all',this)">All Grades</button>
+      <button class="grade-tab" onclick="filterGrade('6-8',this)">Class 6–8</button>
+      <button class="grade-tab" onclick="filterGrade('9-10',this)">Class 9–10</button>
+      <button class="grade-tab" onclick="filterGrade('11-12',this)">Class 11–12</button>
+      <button class="grade-tab" onclick="filterGrade('math',this)">Mathematics</button>
+      <button class="grade-tab" onclick="filterGrade('science',this)">Science</button>
+    </div>
+    <div class="course-grid" id="courseGrid">
+      <!-- Cards inserted by JS -->
+    </div>
+  </section>
+
+  <!-- APPROACH -->
+  <section style="padding:60px 5vw 100px">
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:24px;padding:60px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+      <div>
+        <div class="section-tag">Our Approach</div>
+        <h2 class="section-title" style="font-size:2rem">How Every Class <span class="hl">Works</span></h2>
+        <div class="divider"></div>
+        <div style="display:flex;flex-direction:column;gap:20px;margin-top:20px">
+          <div style="display:flex;gap:16px">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--blue2),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0">1</div>
+            <div><div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:4px">Concept Introduction</div><div style="font-size:.88rem;color:var(--muted)">Clear, visual explanation of every topic from fundamentals up</div></div>
+          </div>
+          <div style="display:flex;gap:16px">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--blue2),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0">2</div>
+            <div><div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:4px">Guided Practice</div><div style="font-size:.88rem;color:var(--muted)">Worked examples and collaborative problem-solving</div></div>
+          </div>
+          <div style="display:flex;gap:16px">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--blue2),var(--blue));border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0">3</div>
+            <div><div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:4px">Homework & PDF Notes</div><div style="font-size:.88rem;color:var(--muted)">Revision-ready material given after every class</div></div>
+          </div>
+          <div style="display:flex;gap:16px">
+            <div style="width:36px;height:36px;background:linear-gradient(135deg,var(--gold2),var(--gold));border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;flex-shrink:0">4</div>
+            <div><div style="font-family:'Syne',sans-serif;font-weight:700;margin-bottom:4px">Regular Tests</div><div style="font-size:.88rem;color:var(--muted)">Periodic assessments to track and celebrate progress</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center">
+        <div style="font-size:8rem;line-height:1">🎓</div>
+        <div style="margin-top:20px;font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:900">Enroll Today</div>
+        <p style="font-size:.9rem;color:var(--muted);margin:10px 0 24px">Start with a completely free demo class</p>
+        <button class="btn-primary" onclick="openModal()">Book Free Demo →</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  PAGE: STUDY MATERIAL                        -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-material">
+  <section style="padding:100px 5vw 80px">
+    <div class="section-tag">Resources</div>
+    <h2 class="section-title">Curated <span class="hl">Study Material</span></h2>
+    <p class="section-sub">Comprehensive PDFs, notes, and practice papers crafted by our expert teachers for every chapter and grade.</p>
+    <div class="material-grid">
+      <div class="material-card reveal"><div class="mc-icon">📐</div><h3>Math Formulas Handbook</h3><p>Complete formula sheets for Class 6–12 covering all chapters — Algebra, Geometry, Trigonometry, Calculus and more.</p><div class="dl-btn">Access Material</div></div>
+      <div class="material-card reveal reveal-delay-1"><div class="mc-icon">⚡</div><h3>Physics Concept Notes</h3><p>Chapter-wise notes with diagrams, key laws, derivations, and solved examples for Class 9–12 Physics.</p><div class="dl-btn">Access Material</div></div>
+      <div class="material-card reveal reveal-delay-2"><div class="mc-icon">🧪</div><h3>Chemistry Quick Revision</h3><p>Reaction summaries, periodic table tricks, organic chemistry frameworks — everything you need the night before an exam.</p><div class="dl-btn">Access Material</div></div>
+      <div class="material-card reveal reveal-delay-3"><div class="mc-icon">🧬</div><h3>Biology Diagrams Pack</h3><p>Labeled diagrams, process flowcharts, and NCERT-aligned notes for Class 9–12 Biology.</p><div class="dl-btn">Access Material</div></div>
+      <div class="material-card reveal"><div class="mc-icon">📊</div><h3>Practice Question Banks</h3><p>Thousands of graded practice questions with step-by-step solutions covering every topic in the curriculum.</p><div class="dl-btn">Access Material</div></div>
+      <div class="material-card reveal reveal-delay-1"><div class="mc-icon">📝</div><h3>Previous Year Papers</h3><p>CBSE & ICSE board exam papers from the past 10 years with model answer keys and marking schemes.</p><div class="dl-btn">Access Material</div></div>
+      <div class="material-card reveal reveal-delay-2"><div class="mc-icon">🏆</div><h3>JEE/NEET Foundation</h3><p>Specially curated material for Class 9–10 students beginning their competitive exam preparation journey.</p><div class="dl-btn">Access Material</div></div>
+      <div class="material-card reveal reveal-delay-3"><div class="mc-icon">🔢</div><h3>Mental Math Drills</h3><p>Speed calculation, vedic math tricks, and estimation techniques to give students an edge in timed exams.</p><div class="dl-btn">Access Material</div></div>
+    </div>
+    <div style="margin-top:50px;background:rgba(0,196,255,.07);border:1px solid rgba(0,196,255,.2);border-radius:16px;padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.1rem">Enrolled Students Get Full Access</div>
+        <div style="font-size:.88rem;color:var(--muted);margin-top:4px">All study materials are provided free of cost to Applied Academy students</div>
+      </div>
+      <button class="btn-primary" onclick="openModal()">Enroll Now →</button>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  PAGE: TESTIMONIALS                          -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-testimonials">
+  <section style="padding:100px 5vw 100px">
+    <div class="section-tag">Student Stories</div>
+    <h2 class="section-title">Words from Our <span class="hl">Students</span></h2>
+    <p class="section-sub">Real results, real voices. Here's what Applied Academy students have to say.</p>
+    <div class="testimonials-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-text">"Applied Academy is more than just a coaching center—it's a place where learning is enjoyable and stress-free. Vikas Bhaiya ensures we truly understand concepts rather than just memorizing them. With personalized attention and regular tests, we're always well-prepared."</p>
+        <div class="testi-author"><div class="testi-avatar">MT</div><div><div class="testi-name">Manya Tyagi</div><div class="testi-grade">Class 10th · Mathematics & Science</div></div></div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-text">"My grades went from average to top 5 in class. Vikas sir's method of teaching Math is unlike anything I've seen. He breaks down every problem step by step until it clicks. Best decision my parents made!"</p>
+        <div class="testi-author"><div class="testi-avatar">RK</div><div><div class="testi-name">Rahul Kumar</div><div class="testi-grade">Class 9th · Mathematics</div></div></div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-text">"Ashish sir made Science so interesting. I used to dread Chemistry but now it's my favorite subject. The way he connects theory to real life is amazing. I scored 95 in my boards!"</p>
+        <div class="testi-author"><div class="testi-avatar">PS</div><div><div class="testi-name">Priya Sharma</div><div class="testi-grade">Class 12th · Science</div></div></div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-text">"The free PDFs and revision notes are incredibly helpful. I could revise entire chapters the night before exams. The environment at Applied Academy is so positive and motivating."</p>
+        <div class="testi-author"><div class="testi-avatar">AG</div><div><div class="testi-name">Aarav Gupta</div><div class="testi-grade">Class 8th · Mathematics & Science</div></div></div>
+      </div>
+      <div class="testi-card reveal reveal-delay-1">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-text">"My daughter's confidence grew tremendously here. She went from fearing Math to actually enjoying it. The teachers give individual attention which makes all the difference."</p>
+        <div class="testi-author"><div class="testi-avatar">SP</div><div><div class="testi-name">Sunita (Parent)</div><div class="testi-grade">Parent of Class 7 Student</div></div></div>
+      </div>
+      <div class="testi-card reveal reveal-delay-2">
+        <div class="testi-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="testi-text">"I joined Applied Academy in Class 9 for JEE Foundation. The conceptual depth here is excellent. Regular tests keep us exam-ready. Vikas sir's problem-solving strategies are invaluable."</p>
+        <div class="testi-author"><div class="testi-avatar">KM</div><div><div class="testi-name">Kartik Mehta</div><div class="testi-grade">Class 11th · JEE Preparation</div></div></div>
+      </div>
+    </div>
+
+    <!-- RATING SUMMARY -->
+    <div style="margin-top:60px;background:var(--card);border:1px solid var(--border);border-radius:24px;padding:50px;display:grid;grid-template-columns:auto 1fr;gap:60px;align-items:center">
+      <div style="text-align:center">
+        <div style="font-family:'Playfair Display',serif;font-size:5rem;font-weight:900;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1">5.0</div>
+        <div style="display:flex;gap:6px;justify-content:center;margin:10px 0"><span style="color:var(--gold);font-size:1.5rem">★★★★★</span></div>
+        <div style="font-size:.82rem;color:var(--muted)">Based on 100+ reviews</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:center;gap:14px"><span style="font-size:.82rem;color:var(--muted);width:60px;text-align:right">5 ★</span><div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:92%;background:var(--gold);border-radius:4px"></div></div><span style="font-size:.82rem;color:var(--muted);width:40px">92%</span></div>
+        <div style="display:flex;align-items:center;gap:14px"><span style="font-size:.82rem;color:var(--muted);width:60px;text-align:right">4 ★</span><div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:6%;background:var(--gold);border-radius:4px;opacity:.7"></div></div><span style="font-size:.82rem;color:var(--muted);width:40px">6%</span></div>
+        <div style="display:flex;align-items:center;gap:14px"><span style="font-size:.82rem;color:var(--muted);width:60px;text-align:right">3 ★</span><div style="flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden"><div style="height:100%;width:2%;background:var(--gold);border-radius:4px;opacity:.4"></div></div><span style="font-size:.82rem;color:var(--muted);width:40px">2%</span></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  PAGE: FAQ                                   -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-faq">
+  <section style="padding:100px 5vw 100px">
+    <div class="section-tag">Got Questions?</div>
+    <h2 class="section-title">Frequently Asked <span class="hl">Questions</span></h2>
+    <p class="section-sub">Everything you need to know about Applied Academy, our courses, and how we work.</p>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>Which grades does Applied Academy cater to?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>Applied Academy provides expert coaching for students from Class 6 to Class 12. Whether your child is in middle school building foundations or in senior school preparing for board exams and entrance tests, we have a tailored program for them.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>What subjects are taught at Applied Academy?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>We specialize in Mathematics and Science. Science includes Physics, Chemistry, and Biology depending on the student's grade and board. Our teachers are subject specialists with deep expertise in their domains.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>How can I book a free demo class?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>Simply click the "Book Free Demo" button anywhere on this website, fill in your child's details, and our team will contact you within 24 hours to schedule a convenient demo session. The demo is completely free with no obligations.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>What makes Applied Academy different from other coaching centers?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>We focus on conceptual understanding rather than rote memorization. Our batch sizes are small to ensure individual attention. We provide regular assessments, personalized feedback, and free study material including PDFs. Our track record of 90% grade improvement speaks for itself. The environment is positive, stress-free, and genuinely enjoyable.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>Do you provide study material and notes?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>Yes! All enrolled students receive comprehensive study material including chapter-wise notes, formula sheets, practice question banks, previous year papers, and revision PDFs — all at no extra cost. This material is prepared exclusively by our teachers.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>Are the classes conducted online or offline?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>Applied Academy primarily conducts offline classes at our center in Noida, which allows for the personal interaction and hands-on teaching that makes our approach so effective. Please contact us directly to inquire about any online options that may be available.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>How are the batch sizes managed?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>We keep our batches small and focused to ensure every student receives individual attention. This personalized approach is central to why our students see such significant grade improvements. Contact us for current batch availability.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>Do you help with entrance exam preparation like JEE and NEET?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>Yes! We offer specialized foundation courses for JEE and NEET preparation starting from Class 9. Building strong Math and Science fundamentals early is crucial for success in these competitive exams, and our curriculum is designed with this long-term goal in mind.</p></div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q"><h3>What are the timings and fees?</h3><div class="faq-icon">+</div></div>
+        <div class="faq-a"><p>Class timings and fee structure are discussed during the demo session and can be customized based on your child's grade and requirements. Please contact us at +91 88512 84700 or fill the contact form to get detailed information.</p></div>
+      </div>
+    </div>
+    <div style="margin-top:40px;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem">Still have questions?</div>
+        <div style="font-size:.88rem;color:var(--muted);margin-top:4px">Our team is happy to help — reach out anytime</div>
+      </div>
+      <button class="btn-primary" onclick="navigate('contact')">Contact Us →</button>
+    </div>
+  </section>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!--  PAGE: CONTACT                               -->
+<!-- ════════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <section style="padding:100px 5vw 100px">
+    <div class="section-tag">Reach Out</div>
+    <h2 class="section-title">Let's Start Your <span class="hl">Journey Together</span></h2>
+    <p class="section-sub">Have questions? Want to enroll? We'd love to hear from you. Our team typically responds within a few hours.</p>
+    <div class="contact-layout">
+      <div class="contact-info">
+        <div class="contact-info-item reveal">
+          <div class="contact-info-icon">📍</div>
+          <div class="contact-info-text"><h4>Location</h4><p>Noida, Uttar Pradesh, India</p></div>
+        </div>
+        <div class="contact-info-item reveal reveal-delay-1">
+          <div class="contact-info-icon">📞</div>
+          <div class="contact-info-text"><h4>Phone</h4><a href="tel:+918851284700">+91 88512 84700</a><br/><a href="tel:+919810255025">+91 98102 55025</a></div>
+        </div>
+        <div class="contact-info-item reveal reveal-delay-2">
+          <div class="contact-info-icon">✉️</div>
+          <div class="contact-info-text"><h4>Email</h4><a href="mailto:appliedacademy22@gmail.com">appliedacademy22@gmail.com</a></div>
+        </div>
+        <div class="contact-info-item reveal reveal-delay-3">
+          <div class="contact-info-icon">🕐</div>
+          <div class="contact-info-text"><h4>Class Timings</h4><p>Monday – Saturday<br>Morning & Evening Batches Available</p></div>
+        </div>
+        <div class="reveal" style="margin-top:10px">
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;color:var(--muted)">Follow Us</div>
+          <div class="footer-social">
+            <a class="social-btn" href="#" title="Instagram">📸</a>
+            <a class="social-btn" href="#" title="Facebook">💬</a>
+            <a class="social-btn" href="#" title="YouTube">▶️</a>
+            <a class="social-btn" href="#" title="WhatsApp">📱</a>
+          </div>
+        </div>
+        <div class="why-card reveal" style="margin-top:10px">
+          <span class="why-icon">🎓</span>
+          <h3>Book a Free Demo</h3>
+          <p>Experience our teaching firsthand. No cost, no commitment. Just show up and see the difference.</p>
+          <button class="btn-primary" style="margin-top:20px;width:100%" onclick="openModal()">Schedule Demo →</button>
+        </div>
+      </div>
+      <div class="contact-form reveal reveal-delay-1">
+        <h3 style="font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:800;margin-bottom:6px">Send Us a Message</h3>
+        <p style="font-size:.88rem;color:var(--muted);margin-bottom:28px">We'll get back to you within 24 hours</p>
+        <div class="form-row">
+          <div class="form-group"><label>First Name *</label><input type="text" placeholder="Rahul"/></div>
+          <div class="form-group"><label>Last Name *</label><input type="text" placeholder="Sharma"/></div>
+        </div>
+        <div class="form-group"><label>Phone *</label><input type="tel" placeholder="+91 98765 43210"/></div>
+        <div class="form-group"><label>Email</label><input type="email" placeholder="rahul@example.com"/></div>
+        <div class="form-row">
+          <div class="form-group"><label>Student's Grade</label>
+            <select>
+              <option value="">Select Grade</option>
+              <option>Class 6</option><option>Class 7</option><option>Class 8</option>
+              <option>Class 9</option><option>Class 10</option><option>Class 11</option><option>Class 12</option>
+            </select>
+          </div>
+          <div class="form-group"><label>Subject</label>
+            <select>
+              <option value="">Select Subject</option>
+              <option>Mathematics</option><option>Science</option><option>Both</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Message</label><textarea placeholder="Tell us about your child's current level, goals, or any questions you have..."></textarea></div>
+        <button class="submit-btn" onclick="handleContactSubmit(this)">🚀 Send Message</button>
+        <div class="success-msg" id="contactSuccess">✅ Thank you! We'll reach out within 24 hours.</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ─── FOOTER ─────────────────────────────────── -->
+<footer id="mainFooter">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="nav-logo">Applied<span style="color:var(--blue)">Academy</span></div>
+      <p>Premier coaching institute in Noida for Grades 6–12. Building strong foundations in Mathematics and Science for 7+ years.</p>
+      <div class="footer-social" style="margin-top:20px">
+        <a class="social-btn" href="#" title="Instagram">📸</a>
+        <a class="social-btn" href="#" title="Facebook">💬</a>
+        <a class="social-btn" href="#" title="YouTube">▶️</a>
+        <a class="social-btn" href="#" title="WhatsApp">📱</a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><button onclick="navigate('home')">Home</button></li>
+        <li><button onclick="navigate('about')">About Us</button></li>
+        <li><button onclick="navigate('courses')">Courses</button></li>
+        <li><button onclick="navigate('material')">Study Material</button></li>
+        <li><button onclick="navigate('testimonials')">Testimonials</button></li>
+        <li><button onclick="navigate('faq')">FAQ</button></li>
+        <li><button onclick="navigate('contact')">Contact</button></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Subjects</h4>
+      <ul>
+        <li><a href="#">Mathematics (6–12)</a></li>
+        <li><a href="#">Physics (9–12)</a></li>
+        <li><a href="#">Chemistry (9–12)</a></li>
+        <li><a href="#">Biology (9–12)</a></li>
+        <li><a href="#">Science (6–8)</a></li>
+        <li><a href="#">JEE Foundation</a></li>
+        <li><a href="#">NEET Foundation</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Contact</h4>
+      <ul>
+        <li><a href="tel:+918851284700">+91 88512 84700</a></li>
+        <li><a href="tel:+919810255025">+91 98102 55025</a></li>
+        <li><a href="mailto:appliedacademy22@gmail.com">appliedacademy22@gmail.com</a></li>
+        <li style="color:var(--muted);font-size:.88rem">Noida, Uttar Pradesh</li>
+      </ul>
+      <button class="btn-primary" style="margin-top:20px;width:100%;font-size:.82rem;padding:12px" onclick="openModal()">Book Free Demo</button>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2024 Applied Academy, Noida. All rights reserved.</p>
+    <p style="font-size:.78rem">Made with ♥ for students everywhere</p>
+  </div>
+</footer>
+
+<script>
+/* ─── CANVAS PARTICLE SYSTEM ─── */
+const canvas = document.getElementById('canvas-bg');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resizeCanvas();
+window.addEventListener('resize',resizeCanvas);
+
+class Particle{
+  constructor(){this.reset()}
+  reset(){
+    this.x=Math.random()*canvas.width;
+    this.y=Math.random()*canvas.height;
+    this.size=Math.random()*1.5+.3;
+    this.vx=(Math.random()-.5)*.3;
+    this.vy=(Math.random()-.5)*.3;
+    this.opacity=Math.random()*.4+.05;
+    this.color=Math.random()>.6?'0,196,255':'255,194,71';
+  }
+  update(){
+    this.x+=this.vx;this.y+=this.vy;
+    if(this.x<0||this.x>canvas.width||this.y<0||this.y>canvas.height)this.reset();
+  }
+  draw(){
+    ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+    ctx.fillStyle=`rgba(${this.color},${this.opacity})`;ctx.fill();
+  }
+}
+
+for(let i=0;i<120;i++)particles.push(new Particle());
+
+function animateCanvas(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw()});
+  // connections
+  particles.forEach((a,i)=>{
+    particles.slice(i+1).forEach(b=>{
+      const d=Math.hypot(a.x-b.x,a.y-b.y);
+      if(d<120){
+        ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);
+        ctx.strokeStyle=`rgba(0,196,255,${.04*(1-d/120)})`;ctx.lineWidth=.5;ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(animateCanvas);
+}
+animateCanvas();
+
+/* ─── CURSOR ─── */
+const cursor=document.getElementById('cursor');
+const ring=document.getElementById('cursor-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx+'px';cursor.style.top=my+'px'});
+function animCursor(){
+  rx+=(mx-rx)*.12;ry+=(my-ry)*.12;
+  ring.style.left=rx+'px';ring.style.top=ry+'px';
+  requestAnimationFrame(animCursor);
+}
+animCursor();
+document.querySelectorAll('button,a,[onclick]').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='translate(-50%,-50%) scale(2.5)';ring.style.width='60px';ring.style.height='60px';ring.style.opacity='.3'});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='translate(-50%,-50%) scale(1)';ring.style.width='38px';ring.style.height='38px';ring.style.opacity='.6'});
+});
+
+/* ─── NAV SCROLL ─── */
+window.addEventListener('scroll',()=>{
+  const s=window.scrollY;
+  document.getElementById('mainNav').classList.toggle('scrolled',s>50);
+  const prog=document.getElementById('progress');
+  const pct=s/(document.documentElement.scrollHeight-window.innerHeight)*100;
+  prog.style.width=pct+'%';
+  document.getElementById('btt').classList.toggle('show',s>400);
+});
+
+/* ─── MOBILE MENU ─── */
+let menuOpen=false;
+function toggleMobileMenu(){
+  menuOpen=!menuOpen;
+  document.getElementById('mobileMenu').classList.toggle('open',menuOpen);
+  const h=document.getElementById('hamburger');
+  const spans=h.querySelectorAll('span');
+  if(menuOpen){spans[0].style.transform='rotate(45deg) translate(5px,5px)';spans[1].style.opacity='0';spans[2].style.transform='rotate(-45deg) translate(5px,-5px)'}
+  else{spans[0].style.transform='';spans[1].style.opacity='1';spans[2].style.transform=''}
+}
+function closeMobileMenu(){if(menuOpen)toggleMobileMenu()}
+
+/* ─── PAGE NAVIGATION ─── */
+function navigate(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const target=document.getElementById('page-'+page);
+  if(target){target.classList.add('active');target.classList.remove('page-enter');void target.offsetWidth;target.classList.add('page-enter')}
+  const navBtn=document.getElementById('nav-'+page);
+  if(navBtn)navBtn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(initReveal,100);
+  // init course grid if courses page
+  if(page==='courses')renderCourses('all');
+}
+
+/* ─── MODAL ─── */
+function openModal(){document.getElementById('demoModal').classList.add('open')}
+function closeModal(){document.getElementById('demoModal').classList.remove('open')}
+document.getElementById('demoModal').addEventListener('click',e=>{if(e.target===document.getElementById('demoModal'))closeModal()});
+function handleModalSubmit(btn){
+  btn.textContent='Sending...';btn.disabled=true;
+  setTimeout(()=>{document.getElementById('modalSuccess').style.display='block';btn.style.display='none'},1200);
+}
+function handleContactSubmit(btn){
+  btn.textContent='Sending...';btn.disabled=true;
+  setTimeout(()=>{document.getElementById('contactSuccess').style.display='block';btn.style.display='none'},1200);
+}
+
+/* ─── SCROLL REVEAL ─── */
+function initReveal(){
+  const els=document.querySelectorAll('.page.active .reveal');
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target)}});
+  },{threshold:.12});
+  els.forEach(el=>{if(!el.classList.contains('visible'))obs.observe(el)});
+}
+window.addEventListener('load',initReveal);
+
+/* ─── FAQ TOGGLE ─── */
+function toggleFaq(item){
+  const wasOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+  if(!wasOpen)item.classList.add('open');
+}
+
+/* ─── COUNTER ANIMATION ─── */
+function animateCounters(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target=+el.dataset.count;
+    let cur=0;const step=target/60;
+    const iv=setInterval(()=>{cur+=step;if(cur>=target){cur=target;clearInterval(iv)}el.textContent=Math.floor(cur)+(el.parentElement.classList.contains('stat-item')?'':'+')},16);
+  });
+}
+setTimeout(animateCounters,1200);
+
+/* ─── COURSES DATA & RENDER ─── */
+const courses=[
+  {title:'Mathematics — Foundation',grade:'Class 6–8',tag:'6-8',subject:'math',icon:'📐',desc:'Build a rock-solid base with number systems, fractions, basic algebra, geometry, and data handling.',features:['Number Systems & Fractions','Basic Algebra & Equations','Geometry & Mensuration','Data Handling & Statistics']},
+  {title:'Science — Integrated',grade:'Class 6–8',tag:'6-8',subject:'science',icon:'🔬',desc:'Explore the wonders of Physics, Chemistry, and Biology through experiments, visuals, and real-world examples.',features:['Motion, Force & Energy','Matter & Materials','Living World & Biology','Light, Sound & Electricity']},
+  {title:'Mathematics — Secondary',grade:'Class 9–10',tag:'9-10',subject:'math',icon:'📊',desc:'Master quadratics, coordinate geometry, trigonometry, and statistics for board exam excellence.',features:['Polynomials & Quadratics','Coordinate Geometry','Trigonometry & Heights','Probability & Statistics']},
+  {title:'Physics & Chemistry',grade:'Class 9–10',tag:'9-10',subject:'science',icon:'⚡',desc:'Deep dive into laws of motion, chemical reactions, acids & bases, carbon compounds and more.',features:['Laws of Motion & Gravitation','Chemical Reactions & Equations','Acids, Bases & Salts','Carbon & its Compounds']},
+  {title:'Mathematics — Senior',grade:'Class 11–12',tag:'11-12',subject:'math',icon:'∫',desc:'Advanced calculus, vectors, matrices, and complex numbers — complete senior Math mastery.',features:['Limits, Derivatives & Integrals','Vectors & 3D Geometry','Matrices & Determinants','Probability & Statistics']},
+  {title:'Physics',grade:'Class 11–12',tag:'11-12',subject:'science',icon:'🌌',desc:'From mechanics to modern physics — rigorous conceptual and numerical problem-solving.',features:['Mechanics & Rotational Motion','Electrostatics & Current','Optics & Wave Theory','Modern Physics & Electronics']},
+  {title:'Chemistry',grade:'Class 11–12',tag:'11-12',subject:'science',icon:'🧪',desc:'Physical, organic, and inorganic chemistry with exam-focused problem-solving strategies.',features:['Atomic Structure & Bonding','Thermodynamics & Equilibrium','Organic Chemistry Mechanisms','Coordination Compounds']},
+  {title:'JEE/NEET Foundation',grade:'Class 9–12',tag:'9-10',subject:'math',icon:'🏆',desc:'Early preparation for competitive exams — building the depth and speed that top ranks require.',features:['Olympiad-level Problem Solving','Speed & Accuracy Drills','Concept Mapping','Mock Test Strategy']},
+];
+
+function renderCourses(filter){
+  const grid=document.getElementById('courseGrid');
+  if(!grid)return;
+  const filtered=filter==='all'?courses:courses.filter(c=>c.tag===filter||c.subject===filter);
+  grid.innerHTML=filtered.map(c=>`
+    <div class="course-card reveal" style="animation:fadeUp .5s both">
+      <div class="subject-icon">${c.icon}</div>
+      <div class="grade-badge">${c.grade}</div>
+      <h3>${c.title}</h3>
+      <p>${c.desc}</p>
+      <ul class="course-features">${c.features.map(f=>`<li>${f}</li>`).join('')}</ul>
+      <button class="btn-primary" style="margin-top:20px;width:100%;font-size:.82rem;padding:12px 16px" onclick="openModal()">Enroll →</button>
+    </div>
+  `).join('');
+  setTimeout(initReveal,50);
+}
+
+function filterGrade(filter,btn){
+  document.querySelectorAll('.grade-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  renderCourses(filter);
+}
+
+/* ─── INIT ─── */
+navigate('home');
+renderCourses('all');
+</script>
+</body>
+</html>
