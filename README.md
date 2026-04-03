@@ -19,8 +19,10 @@
 
 ## 🖥️ Tech Stack
 
-- HTML5  
-- GitHub Pages (deployment)  
+- HTML5
+- Javascript
+- CSS3
+- GitHub Pages (deployment)
 
 ---
 
