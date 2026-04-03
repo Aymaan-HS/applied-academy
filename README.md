@@ -1,5 +1,5 @@
 # 📘 Applied Academy
-
+![Applied Academy Thumbnail](./thumbnail.png)
 🚀 **Applied Academy** is a modern educational platform designed to help students **learn, grow, and succeed** through structured courses and an interactive learning experience.
 
 🌐 Live Website:  
@@ -28,11 +28,6 @@
 
 ## 📸 Preview
 
-![Applied Academy Thumbnail](./thumbnail.png)
+
 
 ---
-
-## 🚀 Getting Started
-
-```bash
-git clone https://github.com/your-username/applied-academy.git
